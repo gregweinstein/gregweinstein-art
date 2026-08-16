@@ -864,9 +864,27 @@ function showPiece(k){
     'One of one.'
   ].filter(Boolean).join(' ');
 
+  /* Titles are stored with HTML entities (Betty &amp; Veronica), which belong
+     in the page but not in an email subject line. Round-tripping through a
+     textarea turns them back into the real characters. */
+  var plainTitle = (function(t){
+    var d = document.createElement("textarea");
+    d.innerHTML = t;
+    return d.value;
+  })(p.title);
+
+  /* Opens the visitor's mail app with the piece already named, so Greg can
+     tell at a glance which work an inquiry is about. commissions@ is the
+     address that actually forwards to his inbox. */
+  var mailto = 'mailto:commissions@gregweinstein.art'
+    + '?subject=' + encodeURIComponent('Inquiry: ' + plainTitle)
+    + '&body=' + encodeURIComponent(
+        'I would like to ask about ' + plainTitle + '.\n\n');
+
   var actions = p.atStore
-    ? '<button class="btn">Visit The Hub</button><button class="btn ghost">Inquire</button>'
-    : '<button class="btn">Inquire</button>';
+    ? '<a class="btn" href="' + mailto + '">Inquire</a>'
+      + '<button class="btn ghost">Visit The Hub</button>'
+    : '<a class="btn" href="' + mailto + '">Inquire</a>';
 
   document.querySelector("#detail .inner").innerHTML =
     '<button class="back" onclick="showHome()"><span aria-hidden="true">&larr;</span> Back to all work</button>' +
