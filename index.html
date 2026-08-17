@@ -540,12 +540,13 @@
       <h1>American myths, cut by hand from the sources that made them.</h1>
       <p>Original collage. Comic books, sheet music, packaging. Each work is one of one.</p>
     </div>
-    <!-- Riverdale U.S.A. has no piece page yet, so this does not open one.
-         Kept as a plain figure rather than a dead button so nothing on it
-         invites a click. -->
-    <figure class="hero-img still">
-      <img src="img/hero.jpg" alt="Riverdale U.S.A.: an American flag cut entirely from Archie comic pages">
-    </figure>
+    <!-- The hero is Spider-Spangled Banner, which does have a piece page, so
+         it opens it. A different photograph of the same work than the one on
+         its card. -->
+    <button class="hero-img" onclick="showPiece('spider')" aria-label="View Spider-Spangled Banner">
+      <img src="img/hero.jpg" alt="Spider-Spangled Banner: an American flag cut from Spider-Man and Captain America comic pages">
+      <span class="cue"><svg class="mag" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="6.8" cy="6.8" r="4.7" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M10.3 10.3 L14.3 14.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>View this piece <span aria-hidden="true">&rarr;</span></span>
+    </button>
   </section>
 
   <section class="wrap strip">
