@@ -124,8 +124,12 @@
     cursor:pointer;overflow:hidden;background:var(--panel);border:none;padding:0;
     display:block;width:100%;position:relative;
   }
-  .hero-img img{width:100%;transition:transform var(--t-image) var(--ease)}
+  .hero-img img{width:100%;display:block;transition:transform var(--t-image) var(--ease)}
   .hero-img:hover img{transform:scale(1.02)}
+  /* the hero is a detail with no piece page behind it, so it must not grow
+     under the cursor or read as clickable */
+  .hero-img.still{cursor:default}
+  .hero-img.still:hover img{transform:none}
   /* a standing label, not a hover-only one: on a touch screen there is no
      hover, and nothing else on the page says the image opens */
   .cue{
@@ -154,6 +158,11 @@
 
   /* ---------- gallery ---------- */
   .gallery{padding:96px 0 40px;border-top:1px solid var(--hair);display:flex;flex-direction:column;gap:52px}
+  /* two gallery sections now sit back to back. the second needs its own rule
+     above it, and the pair needs a heading block rather than a bare label. */
+  .gallery + .gallery{padding-top:88px}
+  .sec-head{display:flex;flex-direction:column;gap:10px;max-width:56ch}
+  .sec-note{font-size:14.5px;color:var(--muted)}
   .grid{
     display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
     gap:64px 44px;
@@ -164,6 +173,12 @@
   }
   .card-img{overflow:hidden;background:var(--panel)}
   .card-img img{width:100%;transition:transform var(--t-image) var(--ease)}
+  /* These photographs come in different shapes, which left the studio grid
+     looking ragged. Every tile is now the same square. The artwork is fitted
+     inside it rather than cropped to fill it: cropping a piece to make a grid
+     tidy cuts off part of the work. */
+  .grid.even .card-img{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
+  .grid.even .card-img img{width:100%;height:100%;object-fit:contain}
   .card:hover .card-img img{transform:scale(1.035)}
   .card-txt{display:flex;flex-direction:column;gap:5px}
   .card h3{font-family:ui-serif,Georgia,serif;font-size:19px;font-weight:400;letter-spacing:-.005em}
@@ -475,7 +490,10 @@
     .step{padding-top:26px}
     .step-num{font-size:44px}
     .bar{padding:16px 20px}
-    .wrap{padding:0 20px}
+    /* was `padding:0 20px`. That shorthand also zeroed the TOP and BOTTOM
+       padding of .hero, .strip and .gallery on any screen under 860px, so on a
+       phone every section ran into the one above it. The side gutter is set as
+       longhand at the end of this stylesheet, so nothing is needed here. */
     nav{gap:18px}
     nav button{font-size:10px;letter-spacing:.16em}
     .d-body{padding:44px 0 32px}
@@ -522,10 +540,12 @@
       <h1>American myths, cut by hand from the sources that made them.</h1>
       <p>Original collage. Comic books, sheet music, packaging. Each work is one of one.</p>
     </div>
-    <button class="hero-img" onclick="showPiece('spider')" aria-label="View Spider-Spangled Banner">
-      <img src="img/spider.jpg" alt="Spider-Spangled Banner">
-      <span class="cue"><svg class="mag" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="6.8" cy="6.8" r="4.7" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M10.3 10.3 L14.3 14.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>View this piece <span aria-hidden="true">&rarr;</span></span>
-    </button>
+    <!-- A detail, not a whole work, so it does not open a piece page: there is
+         nothing behind it to open yet. Kept as a plain figure rather than a
+         dead button so nothing on it invites a click. -->
+    <figure class="hero-img still">
+      <img src="img/hero.jpg" alt="Detail of Riverdale U.S.A.: hand-cut stars made from Archie comic pages">
+    </figure>
   </section>
 
   <section class="wrap strip">
@@ -550,8 +570,27 @@
   </section>
 
   <section class="wrap gallery">
-    <div class="lbl">Available Work</div>
+    <div class="sec-head">
+      <div class="lbl">Available at The Hub Hamptons</div>
+      <p class="sec-note">On view in Bridgehampton. Each of these can be seen in person.</p>
+    </div>
     <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="wrap gallery">
+    <div class="sec-head">
+      <div class="lbl">From the Studio</div>
+      <p class="sec-note">Finished work held at the studio, available directly here.</p>
+    </div>
+    <div class="grid even" id="grid-studio"></div>
+  </section>
+
+  <section class="wrap gallery">
+    <div class="sec-head">
+      <div class="lbl">Selected Commissions</div>
+      <p class="sec-note">Work made for a collector from their own material. Not for sale, shown as a record of what a commission can be.</p>
+    </div>
+    <div class="grid even" id="grid-commissions"></div>
   </section>
 
 </main>
@@ -640,7 +679,7 @@
 
   <figure class="col-side a-f a-stack pb-tight">
     <span class="stack">
-      <img class="box" src="img/box.jpg" alt="A Honey Nut Cheerios box">
+      <img class="box" src="img/box.png" alt="A Honey Nut Cheerios box">
       <img class="snap" src="img/about-1.jpg" alt="Greg with his two daughters, around the years this started">
     </span>
     <figcaption>My daughters, around the age they were when this started, and the box that started it.</figcaption>
@@ -658,12 +697,12 @@
   </div>
 
   <figure class="col-side a-f a-doc pb-row">
-    <img src="img/about-6.jpg" alt="Greg working at a laptop with the finished Wheaties piece hanging behind him">
-    <figcaption>The finished piece on the wall. 48 by 36 inches.</figcaption>
+    <img src="img/about-6.jpg" alt="The Wheaties piece mid-build on a work table, surrounded by cut fragments and the original box art">
+    <figcaption>Mid-build. Cut fragments on plates and in bags, the original boxes kept close for reference.</figcaption>
   </figure>
 
   <figure class="col-full a-f a-art pb-art">
-    <span class="mount"><img src="img/about-3.jpg" alt="The finished Muhammad Ali Wheaties collage"></span>
+    <span class="mount"><img src="img/about-3.jpg" alt="Greg standing beside the finished Muhammad Ali Wheaties collage on the wall"></span>
     <figcaption>Muhammad Ali, cut from 100 vintage Wheaties boxes.</figcaption>
   </figure>
 
@@ -848,11 +887,131 @@ document.getElementById("grid").innerHTML = ORDER.map(function(k){
         '<span class="meta">' + p.year + ' &nbsp;&middot;&nbsp; ' + p.short + '</span>' +
         /* prices are held back for now. the numbers stay in the data above,
            so putting them back is a one-line change, not a rebuild. */
-        (p.atStore ? '<span class="at-store">On display at The Hub</span>' : '') +
+        /* the section heading above the grid now says where these are, so
+           repeating it on one card out of six only reads as a contradiction */
         '<span class="go">' + MAG + 'View piece <span aria-hidden="true">&rarr;</span></span>' +
       '</span>' +
     '</button>';
 }).join("");
+
+/* ---------- From the Studio ----------
+   Work held at the studio rather than at The Hub. These carry only what is
+   actually known today: a title and a photograph. Year, dimensions, medium
+   and price are not recorded for them yet, so nothing here states any. When
+   those facts exist, these entries gain the same fields as PIECES above and
+   can move into that object outright. */
+const STUDIO = [
+  {key:"captain",   title:"Captain America", img:"img/inv-captain.jpg",
+   alt:"Captain America cut from Chips Ahoy packaging and barcodes"},
+  {key:"spiderman", title:"Spider-Man",      img:"img/inv-spiderman.jpg",
+   alt:"Spider-Man cut from Froot Loops boxes"},
+  {key:"wolverine", title:"Wolverine",       img:"img/inv-wolverine.jpg",
+   alt:"Wolverine cut from Honey Bunches of Oats packaging"},
+  {key:"batman",    title:"Batman",          img:"img/inv-batman.jpg",
+   alt:"Batman cut from Oreo packaging, inside a ring of Oreo lettering"},
+  {key:"sweet",     title:"Sweet",           img:"img/inv-sweet.jpg",
+   alt:"The word SWEET cut from Hostess Twinkie, Ding Dong and cupcake wrappers"},
+  {key:"chai",      title:"Chai",            img:"img/inv-chai.jpg",
+   alt:"The Hebrew letters of Chai built from cut comic-book heroes on white"}
+];
+
+/* Commissions already delivered. Shown as a record of the work, not for sale,
+   which is why these cards carry no price line and no Inquire button. */
+const COMMISSIONS = [
+  {key:"sgtpepper",  title:"Sgt. Pepper",      img:"img/com-sgtpepper.jpg",
+   alt:"The Sgt. Pepper album cover rebuilt from cut packaging mascots"},
+  {key:"parliament", title:"Parliament",       img:"img/com-parliament.jpg",
+   alt:"A figure with an afro under the word Parliament, cut from record and can packaging"},
+  {key:"panther",    title:"Black Panther",    img:"img/com-panther.jpg",
+   alt:"Black Panther cut from comic pages, on a background of comic panels"},
+  {key:"eagles",     title:"Eagles",           img:"img/com-eagles.jpg",
+   alt:"The Philadelphia Eagles head cut from Sprite bottle labels on green"},
+  {key:"cola",       title:"Donald Duck Cola", img:"img/com-cola.jpg",
+   alt:"A Donald Duck Cola bottlecap rebuilt in cut paper, on a rayed blue ground"}
+];
+
+/* Opens the visitor's mail app with the work already named, so Greg can tell
+   at a glance which one an inquiry is about. commissions@ is the address that
+   actually forwards to his inbox. Shared by both grids.
+
+   Titles are stored with HTML entities (Betty &amp; Veronica), which belong in
+   the page but not in an email subject line. Round-tripping through a textarea
+   turns them back into the real characters. */
+function mailtoFor(title){
+  var d = document.createElement("textarea");
+  d.innerHTML = title;
+  var plain = d.value;
+  return 'mailto:commissions@gregweinstein.art'
+    + '?subject=' + encodeURIComponent('Inquiry: ' + plain)
+    + '&body=' + encodeURIComponent('I would like to ask about ' + plain + '.\n\n');
+}
+
+function renderTiles(id, list, fn){
+  document.getElementById(id).innerHTML = list.map(function(s){
+    return '<button class="card" onclick="' + fn + '(\'' + s.key + '\')">' +
+        '<span class="card-img"><img loading="lazy" decoding="async" src="' + s.img + '" alt="' + s.alt + '"></span>' +
+        '<span class="card-txt">' +
+          '<h3>' + s.title + '</h3>' +
+          '<span class="go">' + MAG + 'View piece <span aria-hidden="true">&rarr;</span></span>' +
+        '</span>' +
+      '</button>';
+  }).join("");
+}
+renderTiles("grid-studio", STUDIO, "showStudio");
+renderTiles("grid-commissions", COMMISSIONS, "showCommissioned");
+
+function showCommissioned(k){
+  var s = COMMISSIONS.filter(function(x){ return x.key === k; })[0];
+  if(!s) return;
+  document.querySelector("#detail .inner").innerHTML =
+    '<button class="back" onclick="showHome()"><span aria-hidden="true">&larr;</span> Back to all work</button>' +
+    '<div class="viewer" id="viewer">' +
+      '<img src="' + s.img + '" alt="' + s.alt + '">' +
+      '<span class="zoomhint">Click the image to zoom in</span>' +
+    '</div>' +
+    '<div class="d-body">' +
+      '<div class="d-left">' +
+        '<h1>' + s.title + '</h1>' +
+        '<div class="d-desc">A commission, made for a collector from material they chose. Hand-cut, one of one.</div>' +
+        '<div class="factline">Dimensions and full details on request.</div>' +
+      '</div>' +
+      '<div class="buybox">' +
+        '<div class="avail lbl">Commissioned &middot; Not for sale</div>' +
+        '<a class="btn" href="' + mailtoFor('a commission like ' + s.title) + '">Commission something like this</a>' +
+        '<div class="scarcity">About ten works are completed each year. Each one is one of one, and none are reproduced.</div>' +
+      '</div>' +
+    '</div>' +
+    '<button class="back bottom" onclick="showHome()"><span aria-hidden="true">&larr;</span> Back to all work</button>';
+  show("detail");
+  initZoom(2.4);
+}
+
+function showStudio(k){
+  var s = STUDIO.filter(function(x){ return x.key === k; })[0];
+  if(!s) return;
+  document.querySelector("#detail .inner").innerHTML =
+    '<button class="back" onclick="showHome()"><span aria-hidden="true">&larr;</span> Back to all work</button>' +
+    '<div class="viewer" id="viewer">' +
+      '<img src="' + s.img + '" alt="' + s.alt + '">' +
+      '<span class="zoomhint">Click the image to zoom in</span>' +
+    '</div>' +
+    '<div class="d-body">' +
+      '<div class="d-left">' +
+        '<h1>' + s.title + '</h1>' +
+        '<div class="d-desc">Hand-cut collage. One of one, built from the printed material it is made of.</div>' +
+        '<div class="factline">Dimensions and full details on request.</div>' +
+      '</div>' +
+      '<div class="buybox">' +
+        '<div class="p request">Price on request</div>' +
+        '<div class="avail lbl">Available &middot; From the studio</div>' +
+        '<a class="btn" href="' + mailtoFor(s.title) + '">Inquire</a>' +
+        '<div class="scarcity">About ten works are completed each year. Each one is one of one, and none are reproduced.</div>' +
+      '</div>' +
+    '</div>' +
+    '<button class="back bottom" onclick="showHome()"><span aria-hidden="true">&larr;</span> Back to all work</button>';
+  show("detail");
+  initZoom(2.4);
+}
 
 function showPiece(k){
   var p = PIECES[k];
@@ -864,22 +1023,7 @@ function showPiece(k){
     'One of one.'
   ].filter(Boolean).join(' ');
 
-  /* Titles are stored with HTML entities (Betty &amp; Veronica), which belong
-     in the page but not in an email subject line. Round-tripping through a
-     textarea turns them back into the real characters. */
-  var plainTitle = (function(t){
-    var d = document.createElement("textarea");
-    d.innerHTML = t;
-    return d.value;
-  })(p.title);
-
-  /* Opens the visitor's mail app with the piece already named, so Greg can
-     tell at a glance which work an inquiry is about. commissions@ is the
-     address that actually forwards to his inbox. */
-  var mailto = 'mailto:commissions@gregweinstein.art'
-    + '?subject=' + encodeURIComponent('Inquiry: ' + plainTitle)
-    + '&body=' + encodeURIComponent(
-        'I would like to ask about ' + plainTitle + '.\n\n');
+  var mailto = mailtoFor(p.title);
 
   var actions = p.atStore
     ? '<a class="btn" href="' + mailto + '">Inquire</a>'
