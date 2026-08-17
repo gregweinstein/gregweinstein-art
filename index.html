@@ -227,11 +227,37 @@
   /* solid ink on light type so it stays readable over any artwork, and it
      never fades: while zoomed it is the only thing telling you how to get
      back out. its text is rewritten on every toggle. */
+  .zoomcue{position:absolute;left:16px;bottom:16px;pointer-events:none;display:inline-block}
   .zoomhint{
-    position:absolute;left:16px;bottom:16px;
+    display:block;
     background:var(--ink);color:var(--ground);
-    padding:10px 16px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    padding:10px 78px 10px 16px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
     font-weight:500;pointer-events:none;
+  }
+  /* A magnifying glass laid across the corner of the label. The handle runs
+     inside the dark box, angled up to the right; the glass itself sits out on
+     the artwork and shows the real thing magnified underneath it. Saying
+     "zoom" never worked. Showing what zooming gives you does. */
+  .maghandle{
+    position:absolute;left:calc(100% - 60px);bottom:11px;
+    width:42px;height:7px;border-radius:4px;background:var(--ground);
+    transform:rotate(-45deg);transform-origin:left center;
+  }
+  .lens{
+    position:absolute;left:calc(100% - 46px);bottom:calc(100% - 16px);
+    width:116px;height:116px;border-radius:50%;
+    border:4px solid var(--ground);
+    box-shadow:0 0 0 2px var(--ink), 0 10px 26px rgba(0,0,0,.34);
+    background-repeat:no-repeat;background-color:var(--panel);
+  }
+  /* Once the piece is actually zoomed the label becomes the way back out, and
+     a magnifying glass beside it would be pointing at something already done. */
+  .viewer.zoomed .maghandle,
+  .viewer.zoomed .lens{display:none}
+  @media(max-width:560px){
+    .zoomhint{padding-right:64px}
+    .lens{width:88px;height:88px;left:calc(100% - 38px)}
+    .maghandle{left:calc(100% - 50px);width:34px}
   }
   .viewer-note{font-size:12.5px;color:var(--muted);padding-top:12px}
   /* a bordered button rather than bare type: this is the way out of the piece,
@@ -589,7 +615,7 @@
   <section class="wrap gallery">
     <div class="sec-head">
       <div class="lbl">Selected Commissions</div>
-      <p class="sec-note">Work made for a collector from their own material. Not for sale, shown as a record of what a commission can be.</p>
+      <p class="sec-note">Work made for one person, from material that meant something to them. Not for sale, shown as a record of what a commission can be.</p>
     </div>
     <div class="grid even" id="grid-commissions"></div>
   </section>
@@ -917,8 +943,19 @@ const STUDIO = [
 ];
 
 /* Commissions already delivered. Shown as a record of the work, not for sale,
-   which is why these cards carry no price line and no Inquire button. */
+   which is why these cards carry no price line and no Inquire button.
+
+   Most entries carry only a title and a photograph, and fall back to the shared
+   commission text below. An entry may also carry its own desc, factline and
+   avail, which override that fallback. Riverdale is the first of those: it was
+   made for Greg's wife rather than for a paying collector, so the generic
+   "made for a collector from material they chose" line would be wrong on it. */
 const COMMISSIONS = [
+  {key:"riverdale",  title:"Riverdale, U.S.A.", img:"img/com-riverdale.jpg",
+   alt:"An American flag built from cut Archie comic pages, stars made of character faces",
+   avail:"Not for sale",
+   desc:"Archie was my wife Holly's favorite comic book as a girl. She loved everything about it, the rivalry between Betty &amp; Veronica, the vibe at Pop's, and the way everybody stayed exactly the same age forever.<br><br>This is my love letter to her. It hangs in our kitchen, where she keeps finding scenes she never noticed before. This isn't for sale, and as the old Mastercard campaign would say, &ldquo;priceless.&rdquo;",
+   factline:"Riverdale, U.S.A. 36 &times; 48 in. Hand-cut collage of original comic-book pages. One of one."},
   {key:"sgtpepper",  title:"Sgt. Pepper",      img:"img/com-sgtpepper.jpg",
    alt:"The Sgt. Pepper album cover rebuilt from cut packaging mascots"},
   {key:"parliament", title:"Parliament",       img:"img/com-parliament.jpg",
@@ -968,16 +1005,20 @@ function showCommissioned(k){
     '<button class="back" onclick="showHome()"><span aria-hidden="true">&larr;</span> Back to all work</button>' +
     '<div class="viewer" id="viewer">' +
       '<img src="' + s.img + '" alt="' + s.alt + '">' +
-      '<span class="zoomhint">Click the image to zoom in</span>' +
+      '<span class="zoomcue">' +
+        '<span class="zoomhint">Click the image to zoom in</span>' +
+        '<span class="maghandle" aria-hidden="true"></span>' +
+        '<span class="lens" aria-hidden="true"></span>' +
+      '</span>' +
     '</div>' +
     '<div class="d-body">' +
       '<div class="d-left">' +
         '<h1>' + s.title + '</h1>' +
-        '<div class="d-desc">A commission, made for a collector from material they chose. Hand-cut, one of one.</div>' +
-        '<div class="factline">Dimensions and full details on request.</div>' +
+        '<div class="d-desc">' + (s.desc || "A commission, made for a collector from material they chose. Hand-cut, one of one.") + '</div>' +
+        '<div class="factline">' + (s.factline || "Dimensions and full details on request.") + '</div>' +
       '</div>' +
       '<div class="buybox">' +
-        '<div class="avail lbl">Commissioned &middot; Not for sale</div>' +
+        '<div class="avail lbl">' + (s.avail || "Commissioned &middot; Not for sale") + '</div>' +
         '<a class="btn" href="' + mailtoFor('a commission like ' + s.title) + '">Commission something like this</a>' +
         '<div class="scarcity">About ten works are completed each year. Each one is one of one, and none are reproduced.</div>' +
       '</div>' +
@@ -994,7 +1035,11 @@ function showStudio(k){
     '<button class="back" onclick="showHome()"><span aria-hidden="true">&larr;</span> Back to all work</button>' +
     '<div class="viewer" id="viewer">' +
       '<img src="' + s.img + '" alt="' + s.alt + '">' +
-      '<span class="zoomhint">Click the image to zoom in</span>' +
+      '<span class="zoomcue">' +
+        '<span class="zoomhint">Click the image to zoom in</span>' +
+        '<span class="maghandle" aria-hidden="true"></span>' +
+        '<span class="lens" aria-hidden="true"></span>' +
+      '</span>' +
     '</div>' +
     '<div class="d-body">' +
       '<div class="d-left">' +
@@ -1035,7 +1080,11 @@ function showPiece(k){
     '<button class="back" onclick="showHome()"><span aria-hidden="true">&larr;</span> Back to all work</button>' +
     '<div class="viewer' + (p.lowres ? ' lowres' : '') + '" id="viewer">' +
       '<img src="' + p.img + '" alt="' + p.title + '">' +
-      '<span class="zoomhint">Click the image to zoom in</span>' +
+      '<span class="zoomcue">' +
+        '<span class="zoomhint">Click the image to zoom in</span>' +
+        '<span class="maghandle" aria-hidden="true"></span>' +
+        '<span class="lens" aria-hidden="true"></span>' +
+      '</span>' +
     '</div>' +
     (p.lowres ? '<div class="viewer-note">Detail photography for this piece is still in progress, so it will not zoom as close as the others.</div>' : '') +
     '<div class="d-body">' +
@@ -1084,8 +1133,36 @@ function initZoom(scale){
   if(!v) return;
   var img = v.querySelector("img");
   var hint = v.querySelector(".zoomhint");
+  var lens = v.querySelector(".lens");
   var on = false;
   v.classList.add("zoomable");
+
+  /* Fills the glass with the part of the photograph that sits directly under
+     it, magnified. Everything is measured from what is actually on screen, so
+     it stays true at any window width and after the photograph loads. */
+  var LENS_MAG = 2.8;
+  /* The first call can land before the browser has laid the view out, and a
+     silent bail there left the glass empty with nothing to try again. Any bail
+     now re-queues itself for the next few frames. */
+  var lensTries = 0;
+  function fillLens(){
+    if(!lens) return;
+    var i = img.getBoundingClientRect();
+    var l = lens.getBoundingClientRect();
+    if(!i.width || !l.width){
+      if(lensTries++ < 30) requestAnimationFrame(fillLens);
+      return;
+    }
+    lensTries = 0;
+    var r  = l.width / 2;
+    var cx = (l.left - i.left) + r;   /* glass centre, in image coordinates */
+    var cy = (l.top  - i.top)  + r;
+    lens.style.backgroundImage    = "url('" + img.getAttribute("src") + "')";
+    lens.style.backgroundSize     = (i.width*LENS_MAG) + "px " + (i.height*LENS_MAG) + "px";
+    lens.style.backgroundPosition = (r - cx*LENS_MAG) + "px " + (r - cy*LENS_MAG) + "px";
+  }
+  if(img.complete) fillLens(); else img.addEventListener("load", fillLens);
+  window.addEventListener("resize", fillLens);
   /* the label is the only exit sign once the image fills the frame, so it
      always says what the next click does */
   function label(){
