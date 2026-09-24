@@ -928,14 +928,26 @@ document.getElementById("grid").innerHTML = ORDER.map(function(k){
    those facts exist, these entries gain the same fields as PIECES above and
    can move into that object outright. */
 const STUDIO = [
-  {key:"captain",   title:"Captain America", img:"img/inv-captain.jpg",
-   alt:"Captain America cut from Chips Ahoy packaging and barcodes"},
-  {key:"spiderman", title:"Spider-Man",      img:"img/inv-spiderman.jpg",
-   alt:"Spider-Man cut from Froot Loops boxes"},
-  {key:"wolverine", title:"Wolverine",       img:"img/inv-wolverine.jpg",
-   alt:"Wolverine cut from Honey Bunches of Oats packaging"},
-  {key:"batman",    title:"Batman",          img:"img/inv-batman.jpg",
-   alt:"Batman cut from Oreo packaging, inside a ring of Oreo lettering"},
+  {key:"captain",   title:"Chips Ahoy, Captain!", img:"img/inv-captain.jpg",
+   alt:"Captain America cut from Chips Ahoy packaging and barcodes",
+   desc:"Two true blue American icons. Captain America came on the scene in 1941. Chips Ahoy in 1963. Fun fact: Chips Ahoy had a mascot. It was a superhero named Cookie Man, cape, mask, Nabisco crest on his chest, whose actual stated superpower was eating cookies. By that standard, I think most of us qualify as superheroes.",
+   factline:"Chips Ahoy, Captain!, 2026. 6 &times; 6 in. Hand-cut collage of Chips Ahoy packaging. One of one."},
+  {key:"spiderman", title:"Does Whatever a Toucan Can", img:"img/inv-spiderman.jpg",
+   alt:"Spider-Man cut from Froot Loops boxes",
+   desc:"Two red-blooded American icons. Both came on the scene within a few months of each other in the early 1960s. One follows his nose. One follows his spider-sense. One got his powers from a bite. The other powers bites.",
+   factline:"Does Whatever a Toucan Can, 2026. 6 &times; 6 in. Hand-cut collage of Froot Loops packaging. One of one."},
+  {key:"wolverine", title:"Claws and Oates",     img:"img/inv-wolverine.jpg",
+   alt:"Wolverine cut from Honey Bunches of Oats packaging",
+   desc:"Two golden icons. One sweet. One definitely not. One born to battle. The other born in Battle Creek.",
+   factline:"Claws and Oates, 2026. 6 &times; 6 in. Hand-cut collage of Honey Bunches of Oats packaging. One of one."},
+  {key:"batman",    title:"Milk's Favorite Vigilante", img:"img/inv-batman.jpg",
+   alt:"Batman cut from Oreo packaging, inside a ring of Oreo lettering",
+   desc:"Two icons in black and white. Both are hard on the outside and soft in the middle. Both are better at midnight.",
+   factline:"Milk's Favorite Vigilante, 2026. 6 &times; 6 in. Hand-cut collage of Oreo packaging. One of one."},
+  {key:"ironman",   title:"Stark White",          img:"img/inv-ironman.jpg",
+   alt:"Iron Man cut from Crest toothpaste boxes, with barcode eyes",
+   desc:"Two icons, built on protection. Tony Stark built his Iron Man suit to protect his heart. Crest was created to protect your enamel, the only armor you're born with. His comes in red and gold. Yours should be Stark white.",
+   factline:"Stark White, 2026. 6 &times; 6 in. Hand-cut collage of Crest packaging. One of one."},
   {key:"sweet",     title:"Sweet",           img:"img/inv-sweet.jpg",
    alt:"The word SWEET cut from Hostess Twinkie, Ding Dong and cupcake wrappers"},
   {key:"chai",      title:"Chai",            img:"img/inv-chai.jpg",
@@ -963,12 +975,19 @@ const COMMISSIONS = [
    alt:"A figure with an afro under the word Parliament, cut from sparkling water packaging",
    desc:"Parliament's funk never moved in a straight line. It fizzed and popped and rose in bursts, the same way a bottle of sparkling water does the second it opens. Constructed entirely from Origin Sparkling Water packaging, the piece draws the parallel between the sound and the product.",
    factline:"Fizzadelic. 36 &times; 36 in. Hand-cut collage of Origin Sparkling Water packaging. One of one."},
-  {key:"panther",    title:"Black Panther",    img:"img/com-panther.jpg",
-   alt:"Black Panther cut from comic pages, on a background of comic panels"},
-  {key:"eagles",     title:"Eagles",           img:"img/com-eagles.jpg",
-   alt:"The Philadelphia Eagles head cut from Sprite bottle labels on green"},
-  {key:"cola",       title:"Donald Duck Cola", img:"img/com-cola.jpg",
-   alt:"A Donald Duck Cola bottlecap rebuilt in cut paper, on a rayed blue ground"}
+  {key:"panther",    title:"Wakandew",         img:"img/com-panther.jpg",
+   alt:"Black Panther cut from Mtn Dew Spark cans, on a burst of can graphics",
+   factline:"Wakandew, 2024. 36 &times; 48 in. Hand-cut collage of Mtn Dew Spark packaging. One of one."},
+  {key:"eagles",     title:"Thirst Down",      img:"img/com-eagles.jpg",
+   alt:"The Philadelphia Eagles head cut from Sprite packaging on green",
+   desc:"It's not easy being green, unless you're Sprite or the Eagles. The Eagles wore this green for sixty-one years and won three championships in it. Sprite has been green since the day it was born in 1961.",
+   factline:"Thirst Down, 2025. 24 &times; 24 in. Hand-cut collage of Sprite packaging. One of one."},
+  {key:"cola",       title:"Quack Open a Cold One", img:"img/com-cola.jpg",
+   alt:"A Donald Duck Cola bottlecap rebuilt from cut cereal-box labels, on a rayed blue ground",
+   factline:"Quack Open a Cold One, 2024. 24 &times; 24 in. Hand-cut collage of Kellogg's cereal packaging. One of one."},
+  {key:"ali",        title:"The Grainest of All Time", img:"img/com-ali.png",
+   alt:"Muhammad Ali on a Wheaties box, rebuilt from 100 vintage Wheaties boxes",
+   factline:"The Grainest of All Time, 2022. 36 &times; 48 in. Hand-cut collage of vintage Wheaties boxes. One of one."}
 ];
 
 /* Opens the visitor's mail app with the work already named, so Greg can tell
@@ -1047,8 +1066,8 @@ function showStudio(k){
     '<div class="d-body">' +
       '<div class="d-left">' +
         '<h1>' + s.title + '</h1>' +
-        '<div class="d-desc">Hand-cut collage. One of one, built from the printed material it is made of.</div>' +
-        '<div class="factline">Dimensions and full details on request.</div>' +
+        '<div class="d-desc">' + (s.desc || "Hand-cut collage. One of one, built from the printed material it is made of.") + '</div>' +
+        '<div class="factline">' + (s.factline || "Dimensions and full details on request.") + '</div>' +
       '</div>' +
       '<div class="buybox">' +
         '<div class="p request">Price on request</div>' +
