@@ -171,7 +171,9 @@
     cursor:pointer;background:none;border:none;padding:0;text-align:left;
     color:inherit;font-family:inherit;display:flex;flex-direction:column;gap:18px;
   }
-  .card-img{overflow:hidden;background:var(--panel)}
+  .card-img{overflow:hidden;background:var(--panel);position:relative}
+  .sold-tag{position:absolute;top:12px;left:12px;background:var(--ink);color:var(--bg,#fff);
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:6px 10px;font-weight:500}
   .card-img img{width:100%;transition:transform var(--t-image) var(--ease)}
   /* These photographs come in different shapes, which left the studio grid
      looking ragged. Every tile is now the same square. The artwork is fitted
@@ -863,6 +865,7 @@ const PIECES = {
     count:"",
     price:"$1,818",
     atStore:false,
+    sold:true,
     desc:"Superman was made in 1938 by two sons of Jewish immigrants who gave him a Hebrew name (Kal-El) and Moses's origin story: a child sent away from danger and raised to help others. He has always stood for strength used to protect life. Here he breaks through Chai, the word for life, which makes the word both the thing he is pushing through and the thing he is fighting for. Life endures. Real strength is what helps it endure."
   },
   garcia:{
@@ -908,7 +911,7 @@ const MAG =
 document.getElementById("grid").innerHTML = ORDER.map(function(k){
   var p = PIECES[k];
   return '<button class="card" onclick="showPiece(\'' + k + '\')">' +
-      '<span class="card-img"><img loading="lazy" decoding="async" src="' + p.img + '" alt="' + p.title + '"></span>' +
+      '<span class="card-img"><img loading="lazy" decoding="async" src="' + p.img + '" alt="' + p.title + '">' + (p.sold ? '<span class="sold-tag">Sold</span>' : '') + '</span>' +
       '<span class="card-txt">' +
         '<h3>' + p.title + '</h3>' +
         '<span class="meta">' + p.year + ' &nbsp;&middot;&nbsp; ' + p.short + '</span>' +
@@ -1093,7 +1096,9 @@ function showPiece(k){
 
   var mailto = mailtoFor(p.title);
 
-  var actions = p.atStore
+  var actions = p.sold
+    ? '<a class="btn" href="' + mailtoFor('a commission like ' + p.title) + '">Commission something like this</a>'
+    : p.atStore
     ? '<a class="btn" href="' + mailto + '">Inquire</a>'
       + '<button class="btn ghost">Visit The Hub</button>'
     : '<a class="btn" href="' + mailto + '">Inquire</a>';
@@ -1116,8 +1121,8 @@ function showPiece(k){
         '<div class="factline">' + facts + '</div>' +
       '</div>' +
       '<div class="buybox">' +
-        '<div class="p request">Price on request</div>' +
-        '<div class="avail lbl">' + (p.atStore ? 'On display &middot; The Hub, Bridgehampton' : 'Available') + '</div>' +
+        (p.sold ? '' : '<div class="p request">Price on request</div>') +
+        '<div class="avail lbl">' + (p.sold ? 'Sold' : p.atStore ? 'On display &middot; The Hub, Bridgehampton' : 'Available') + '</div>' +
         actions +
         '<div class="scarcity">About ten works are completed each year. Each one is one of one, and none are reproduced.</div>' +
       '</div>' +
