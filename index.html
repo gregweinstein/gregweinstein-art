@@ -953,8 +953,16 @@ const STUDIO = [
    factline:"Stark White, 2026. 6 &times; 6 in. Hand-cut collage of Crest packaging. One of one."},
   {key:"sweet",     title:"Sweet",           img:"img/inv-sweet.jpg",
    alt:"The word SWEET cut from Hostess Twinkie, Ding Dong and cupcake wrappers"},
-  {key:"chai",      title:"Chai",            img:"img/inv-chai.jpg",
-   alt:"The Hebrew letters of Chai built from cut comic-book heroes on white"}
+  {key:"chai",      title:"Chai Society",    img:"img/inv-chai.jpg",
+   alt:"The Hebrew letters of Chai built from cut comic-book heroes on white",
+   sold:true,
+   desc:"Chai, the Hebrew word for life, built from the heroes the children of Jewish immigrants gave America. Superman, Batman, Captain America, the Fantastic Four, the Hulk, Spider-Man: nearly every figure here has a Jewish co-creator, and several of those creators changed their names to get work. Mainstream publishing had little room for them in the 1930s and 1940s, so they took their talent to the cheapest pages on the newsstand and invented the modern American hero there. The country adopted those heroes as its own. Here they come back together, Marvel and DC in the same letter, surrounded by back-page ads for the plastic bags that kept a kid's collection safe. They return to a word their creators' families carried across the ocean.",
+   factline:"Chai Society. 24 &times; 24 in. Hand-cut collage of original comic-book pages on canvas. One of one."},
+  {key:"superstar", title:"SuperStar",       img:"img/inv-superstar.jpg",
+   alt:"Superman, arms crossed, inside a Star of David woven from strips of comic pages, over a black-and-white page of his origin",
+   price:"$3,600",
+   desc:"Superman first appeared in 1938. Two Jewish friends from Cleveland created him: Jerry Siegel and Joe Shuster, both sons of immigrants. They gave him a story their own people had told for thousands of years. The comic page behind the Star of David shows his parents placing him in a basket inside a rocket and sending him away to save him from their dying planet, a clear nod to baby Moses in his basket on the Nile. America's most famous hero, standing inside the star his story came from.",
+   factline:"SuperStar, 2026. 16 &times; 22 in. Hand-cut collage of original comic-book pages on mat board. One of one."}
 ];
 
 /* Commissions already delivered. Shown as a record of the work, not for sale,
@@ -1012,7 +1020,7 @@ function mailtoFor(title){
 function renderTiles(id, list, fn){
   document.getElementById(id).innerHTML = list.map(function(s){
     return '<button class="card" onclick="' + fn + '(\'' + s.key + '\')">' +
-        '<span class="card-img"><img loading="lazy" decoding="async" src="' + s.img + '" alt="' + s.alt + '"></span>' +
+        '<span class="card-img"><img loading="lazy" decoding="async" src="' + s.img + '" alt="' + s.alt + '">' + (s.sold ? '<span class="sold-tag">Sold</span>' : '') + '</span>' +
         '<span class="card-txt">' +
           '<h3>' + s.title + '</h3>' +
           '<span class="go">' + MAG + 'View piece <span aria-hidden="true">&rarr;</span></span>' +
@@ -1073,9 +1081,11 @@ function showStudio(k){
         '<div class="factline">' + (s.factline || "Dimensions and full details on request.") + '</div>' +
       '</div>' +
       '<div class="buybox">' +
-        '<div class="p request">Price on request</div>' +
-        '<div class="avail lbl">Available &middot; From the studio</div>' +
-        '<a class="btn" href="' + mailtoFor(s.title) + '">Inquire</a>' +
+        (s.sold ? '' : '<div class="p request">Price on request</div>') +
+        '<div class="avail lbl">' + (s.sold ? 'Sold' : 'Available &middot; From the studio') + '</div>' +
+        (s.sold
+          ? '<a class="btn" href="' + mailtoFor('a commission like ' + s.title) + '">Commission something like this</a>'
+          : '<a class="btn" href="' + mailtoFor(s.title) + '">Inquire</a>') +
         '<div class="scarcity">About ten works are completed each year. Each one is one of one, and none are reproduced.</div>' +
       '</div>' +
     '</div>' +
