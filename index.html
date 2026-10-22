@@ -163,6 +163,7 @@
   .gallery + .gallery{padding-top:88px}
   .sec-head{display:flex;flex-direction:column;gap:10px;max-width:56ch}
   .sec-note{font-size:14.5px;color:var(--muted)}
+  .sec-note a{color:var(--ink,inherit);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
   .grid{
     display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
     gap:64px 44px;
@@ -571,11 +572,22 @@
     <!-- The hero is Spider-Spangled Banner, which does have a piece page, so
          it opens it. A different photograph of the same work than the one on
          its card. -->
-    <button class="hero-img" onclick="showPiece('spider')" aria-label="View Spider-Spangled Banner">
+    <button class="hero-img" onclick="showPopArt('spider')" aria-label="View Spider-Spangled Banner">
       <img src="img/hero.jpg" alt="Spider-Spangled Banner: an American flag cut from Spider-Man and Captain America comic pages">
       <span class="cue"><svg class="mag" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="6.8" cy="6.8" r="4.7" fill="none" stroke="currentColor" stroke-width="1.6"></circle><path d="M10.3 10.3 L14.3 14.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>View this piece <span aria-hidden="true">&rarr;</span></span>
     </button>
   </section>
+
+  <!-- ===== POP ART GALLERY: START (retire by deleting this section, the
+       POP ART GALLERY block in the script, and its renderTiles line) ===== -->
+  <section class="wrap gallery">
+    <div class="sec-head">
+      <div class="lbl">Now at Pop Art Gallery, New York</div>
+      <p class="sec-note">On view at Pop Art Gallery, 1382 Avenue of the Americas, New York, NY 10019. Each of these can be seen in person. <a href="https://popartny.com" target="_blank" rel="noopener">popartny.com</a></p>
+    </div>
+    <div class="grid even" id="grid-popart"></div>
+  </section>
+  <!-- ===== POP ART GALLERY: END ===== -->
 
   <section class="wrap strip">
     <div class="strip-head">
@@ -902,7 +914,7 @@ const PIECES = {
   }
 };
 
-const ORDER = ["spider","betty","beatles","chai","garcia","pint","kicks"];
+const ORDER = ["betty","beatles","chai","garcia","pint","kicks"];
 
 /* A magnifying glass beside every "View piece". The words alone were being
    read as another caption; a mark that means "look closer" is caught by the
@@ -961,10 +973,6 @@ const STUDIO = [
    alt:"The word SWEET cut from Hostess Twinkie, Ding Dong and cupcake wrappers",
    desc:"Open a box of Hostess CupCakes and one word comes to mind before the first bite. Here the cupcakes themselves spell it out, chocolate with the white squiggle, on the same pink as a Sno Ball. Around it, the boxes pile up in every direction: Twinkies, Ding Dongs, Sno Balls, CupCakes. The word and the thing it describes come from the same box.",
    factline:"Sweet, 2026. 24 &times; 36 in. Hand-cut collage of Hostess packaging on foam core. One of one."},
-  {key:"superstar", title:"SuperStar",       img:"img/inv-superstar.jpg",
-   alt:"Superman, arms crossed, inside a Star of David woven from strips of comic pages, over a black-and-white page of his origin",
-   desc:"Superman first appeared in 1938. Two Jewish friends from Cleveland created him: Jerry Siegel and Joe Shuster, both sons of immigrants. They gave him a story their own people had told for thousands of years. The comic page behind the Star of David shows his parents placing him in a basket inside a rocket and sending him away to save him from their dying planet, a clear nod to baby Moses in his basket on the Nile. America's most famous hero, standing inside the star his story came from.",
-   factline:"SuperStar, 2026. 16 &times; 22 in. Hand-cut collage of original comic-book pages on mat board. One of one."},
   {key:"israel",    title:"People of the <em>Comic</em> Book", img:"img/inv-israel.jpg",
    alt:"The flag of Israel with its blue stripes and Star of David built from cut Marvel and DC superheroes",
    desc:"The flag of Israel, filled with American superheroes. Every hero here traces back to a Jewish creator. Superman came from Jerry Siegel and Joe Shuster. Batman came from Bob Kane and Bill Finger. Captain America came from Joe Simon and Jack Kirby. Spider-Man, Thor, the Thing, and the Silver Surfer came from Stan Lee and Kirby. Wolverine and Storm came from Len Wein. Most of these men were the sons of immigrants, writing for American kids, and the heroes they made became America's own. Here those same heroes fill the blue stripes and build the Star of David at the center.",
@@ -1043,6 +1051,62 @@ function renderTiles(id, list, fn){
   }).join("");
 }
 renderTiles("grid-studio", STUDIO, "showStudio");
+
+/* ===== POP ART GALLERY: START =====
+   Work on view at Pop Art Gallery in Manhattan. No prices anywhere on the
+   site, so this pop-up has no price line. SuperStar moved here from STUDIO;
+   when the show ends, move it back. Spider-Spangled Banner moved here from
+   The Hub (removed from ORDER, hero button points here); put it back in
+   ORDER and the hero onclick back to showPiece when the show ends. Pieces without approved wall text fall
+   back to the generic line rather than invented copy. */
+const POPART = [
+  {key:"wonder",    title:"Wonderstruck",           img:"img/gal-wonder.jpg",
+   alt:"Wonder Woman's bracelet deflecting a bullet, the bracelet built from cut faces of Wonder Woman",
+   factline:"Wonderstruck. 24 &times; 24 in, framed 30 &times; 30 in. Hand-cut collage. One of one."},
+  {key:"mensch",    title:"Mensch of Steel",        img:"img/gal-mensch.jpg",
+   alt:"Superman leaping out of the Hebrew letters of Chai, built from strips of comic pages, in a black mat with a red border",
+   factline:"Mensch of Steel, 2026. 20 &times; 16.5 in. Hand-cut collage of original comic-book pages on paper. One of one."},
+  {key:"spider",    title:"Spider-Spangled Banner", img:"img/spider.jpg",
+   alt:"An American flag with stars built from Captain America and red stripes built from Spider-Man",
+   desc:PIECES.spider.desc,
+   factline:"Spider-Spangled Banner, 2026. 36 &times; 48 &times; .75 in. Approximately 3,000 hand-cut pieces of original comic-book pages on wood panel. One of one."},
+  {key:"superstar", title:"SuperStar",              img:"img/inv-superstar.jpg",
+   alt:"Superman, arms crossed, inside a Star of David woven from strips of comic pages, over a black-and-white page of his origin",
+   desc:"Superman first appeared in 1938. Two Jewish friends from Cleveland created him: Jerry Siegel and Joe Shuster, both sons of immigrants. They gave him a story their own people had told for thousands of years. The comic page behind the Star of David shows his parents placing him in a basket inside a rocket and sending him away to save him from their dying planet, a clear nod to baby Moses in his basket on the Nile. America's most famous hero, standing inside the star his story came from.",
+   factline:"SuperStar, 2026. 16 &times; 22 in. Hand-cut collage of original comic-book pages on mat board. One of one."}
+];
+renderTiles("grid-popart", POPART, "showPopArt");
+
+function showPopArt(k){
+  var s = POPART.filter(function(x){ return x.key === k; })[0];
+  if(!s) return;
+  document.querySelector("#detail .inner").innerHTML =
+    '<button class="back" onclick="showHome()"><span aria-hidden="true">&larr;</span> Back to all work</button>' +
+    '<div class="viewer" id="viewer">' +
+      '<img src="' + s.img + '" alt="' + s.alt + '">' +
+      '<span class="zoomcue">' +
+        '<span class="zoomhint">Click the image to zoom in</span>' +
+        '<span class="maghandle" aria-hidden="true"></span>' +
+        '<span class="lens" aria-hidden="true"></span>' +
+      '</span>' +
+    '</div>' +
+    '<div class="d-body">' +
+      '<div class="d-left">' +
+        '<h1>' + s.title + '</h1>' +
+        '<div class="d-desc">' + (s.desc || "Hand-cut collage. One of one, built from the printed material it is made of.") + '</div>' +
+        '<div class="factline">' + (s.factline || "Dimensions and full details on request.") + '</div>' +
+      '</div>' +
+      '<div class="buybox">' +
+        '<div class="avail lbl">On view &middot; Pop Art Gallery, New York</div>' +
+        '<a class="btn" href="https://popartny.com" target="_blank" rel="noopener">Visit Pop Art Gallery</a>' +
+        '<div class="scarcity">Pop Art Gallery, 1382 Avenue of the Americas, New York, NY 10019.</div>' +
+      '</div>' +
+    '</div>' +
+    '<button class="back bottom" onclick="showHome()"><span aria-hidden="true">&larr;</span> Back to all work</button>';
+  show("detail");
+  initZoom(2.4);
+}
+/* ===== POP ART GALLERY: END ===== */
 renderTiles("grid-commissions", COMMISSIONS, "showCommissioned");
 
 function showCommissioned(k){
